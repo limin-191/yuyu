@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cy.mapper.StaffMapper">
+
+    <!--管理员登入-->
+    <select id="stLogin" resultType="Tblstaff">
+        select * from tblstaff where staffAcc=#{staffAcc} and staffPwd=#{staffPwd}
+
+    </select>
+
+    <!--修改密码-->
+    <update id="upStPwd">
+
+        update tblstaff set staffPwd=#{pwd} where staffAcc= #{acc}
+
+    </update>
+
+    <!--人员管理添加-->
+    <insert id="intoStaff">
+        insert into tblstaff(staffAcc,staffPwd,roleId,staffName,msgState) values (#{staffAcc},#{staffPwd},#{roleId},#{staffName},1)
+    </insert>
+
+    <!--人员管理查询-->
+    <select id="sestaff" resultType="Tblstaff">
+        select a.*,b.roleName from tblstaff a ,tblrole b  where a.roleId=b.roleId
+
+            <if test="staffName !=null and staffName !=''">
+                and staffName = like concat('%',#{staffName},'%')
+            </if>
+            <if test="staffAcc!=null and staffAcc !=''">
+                and staffAcc =#{staffAcc}
+            </if>
+
+            <if test="roleId >0">
+                and a.roleId =#{roleId}
+            </if>
+
+            <if test="msgState>0">
+                and msgState=#{msgState}
+            </if>
+
+    </select>
+
+    <!--人员管理修改-->
+    <update id="upStaff">
+        update tblstaff set staffAcc=#{staffAcc},staffPwd=#{staffPwd},roleId=#{roleId},staffName=#{staffName} where staffId=#{staffId}
+    </update>
+
+    <!--人员管理状态修改-->
+    <update id="upStatus">
+        update tblstaff set msgState=#{Status} where staffId=#{staffId}
+    </update>
+    
+    <select id="seTblstaff" resultType="Tblstaff">
+        SELECT * from tblstaff where staffId=#{staffId}
+    </select>
+
+      <!--人员管理重置密码-->
+    <update id="upStPwd1">
+
+        update tblstaff set staffPwd=#{pwd} where staffId= #{staffId}
+
+    </update>
+
+
+    <!--&lt;!&ndash;人员管理查询（分页）&ndash;&gt;-->
+    <!--<select id="sestaff1" resultType="Tblstaff">-->
+        <!--select a.*,b.roleName from tblstaff a ,tblrole b  where a.roleId=b.roleId-->
+
+        <!--<if test="staffName !=null and staffName !=''">-->
+            <!--and staffName =#{staffName}-->
+        <!--</if>-->
+        <!--<if test="staffAcc!=null and staffAcc !=''">-->
+            <!--and staffAcc =#{staffAcc}-->
+        <!--</if>-->
+
+        <!--<if test="roleId >0">-->
+            <!--and a.roleId =#{roleId}-->
+        <!--</if>-->
+
+        <!--<if test="msgState>0">-->
+            <!--and msgState =#{msgState}-->
+        <!--</if>-->
+        <!--limit #{start},#{pageSize}-->
+
+    <!--</select>-->
+
+
+    <!--人员管理查询 总条数-->
+    <select id="sestaff2" resultType="java.lang.Integer">
+        select count(*)from tblstaff a ,tblrole b  where a.roleId=b.roleId
+
+        <if test="staffName !=null and staffName !=''">
+            and staffName =#{staffName}
+        </if>
+        <if test="staffAcc!=null and staffAcc !=''">
+            and staffAcc =#{staffAcc}
+        </if>
+
+        <if test="roleId >0">
+            and a.roleId =#{roleId}
+        </if>
+
+        <if test="msgState>0">
+            and msgState =#{msgState}
+        </if>
+
+    </select>
+
+</mapper>
